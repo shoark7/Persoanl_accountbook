@@ -8,6 +8,7 @@
 import datetime
 import json
 import sys
+import time
 
 # 비밀번호 설정. 내가 아닌 다른 사람이 입력하는 것을 방지한다.
 try:
@@ -40,6 +41,27 @@ def which_day(date):
 
 """ 메뉴 선택 기능 Section """
 # 기능은 크게 1. 일일 지출금액 추가기능, 2. 지난 월별 합계 및 일일 평균 기능, 3. 특정 날짜 검색 기능, 4~. To be continued.
+print("반갑습니다. 현재 시각", str(datetime.datetime.now())+"입니다.")
+print("본 기능은 당신이 용돈지출을 어떻게 하는지 추적하고 그 활용을 돕고자 하는 데 의의가 있습니다.")
+print()
+
+while True:
+	print("""용돈 지출 입력은 1,
+월별 합계 기능은 2,
+특정 날짜 지출금액 검색은 3,
+종료는 9를 입력해주세요.""")
+	print(">" * 50)
+	menu_selected = input("원하시는 기능을 입력해주세요. : ")
+
+	while menu_selected not in ["1","2","3","9"]:
+		input("4가지의 숫자 중 원하시는 것을 정확히 입력해주세요. : ")
+
+	if menu_selected == "9":
+		print("감사합니다. 프로그램을 종료합니다.")
+		for i in range(3):
+			print("종료까지.. "+str(3-i))
+			time.sleep(1)
+		break	
 
 
 
