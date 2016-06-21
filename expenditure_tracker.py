@@ -1,4 +1,4 @@
-#auto_open_16_6_18.py
+#expenditure_tracker.py
 """ 
 컴퓨터 시작 시 자동으로 시작되고, 
 그래서 매일의 돈 지출의 기록을 기록, 추적할 수 있도록 하는 것이 핵심이다.
@@ -29,12 +29,17 @@ else:
 	if input_password != "696238":
 		sys.exit()
 
+
+
 # 오늘에 대한 정보 입력. 이후 각각 파일에 저장될 것임.
+today = datetime.date.today()
+def which_day(date):
+	return ['월', '화','수','목','금','토','일'][date.weekday()]
 
 
 
 """ 메뉴 선택 기능 Section """
-
+# 기능은 크게 1. 일일 지출금액 추가기능, 2. 지난 월별 합계 및 일일 평균 기능, 3. 특정 날짜 검색 기능, 4~. To be continued.
 
 
 
