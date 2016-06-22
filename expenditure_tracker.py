@@ -69,18 +69,18 @@ while True:
 		break	
 
 # 파일 업로드 :
-	total_record = []
+	
 	with open('daily_expenditure.txt', 'rb') as money:
-		while True:
-			try:
-				total_record.append(pickle.load(money))
-			except:
-				break
+		try:
+			total_record = pickle.load(money)
+		except:
+			total_record = []
+		
 	if total_record == []:
 		recent_record = [];
 	else:
 		recent_record = total_record[-1]
-
+	print(total_record)
 
 #####################################
 #### menu 1. 지출금액 추가 기능.
@@ -93,18 +93,41 @@ while True:
 	if menu_selected == "1":
 		# 1.1 
 		if recent_record == [] or recent_record['today'] != str(today):
-			print()
-			print("오늘의 처음 입력이십니다.")
+			print("\n오늘의 처음 입력이십니다.")
 			money_spent = input("오늘 사용하신 금액을 입력해주세요. : ")
 			while not money_spent.isnumeric():
 				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 
 			record = {'today':str(today), 'weekday':which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':money_spent}
-			with open('daily_expenditure.txt', 'ab') as money:
-				pickle.dump(record, money)
+			total_record.append(record)
+			with open('daily_expenditure.txt', 'wb') as money:
+				pickle.dump(total_record, money)
 
 			print('\n')
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", record[money_spent])
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", record['money_used'],"원")
 
-		
+
+		# 1.2
+		elif recent_record['today'] == str(today):
+			print()
+			print("오늘 이미 입력하셨습니다. 이전 지출에 추가됩니다.")
+			money_spent = input("오늘 사용하신 금액을 입력해주세요. : ")
+			while not money_spent.isnumeric():
+				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
+			money_spent = int(money_spent)
+			recent_record['money_used'] += money_spent
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", str(recent_record['money_used']))
+			print("*" * 80,'\n')
+			
+			total_record[-1] = recent_record
+			with open('daily_expenditure.txt', 'wb') as money:
+				pickle.dump(total_record, money)
+
+
+
+
+
+
+
+ 			
