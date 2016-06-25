@@ -38,8 +38,7 @@ import Functions_for_tracker as ft # 내가 만든 함수 저장소
 
 # 오늘에 대한 정보 입력. 이후 각각 파일에 저장될 것임.
 today = datetime.date.today()
-def which_day(date): 						# 입력한 날짜가 무슨 요일인지 반환하는 함수.
-	return ['월', '화','수','목','금','토','일'][date.weekday()]
+
 
 
 
@@ -47,14 +46,15 @@ def which_day(date): 						# 입력한 날짜가 무슨 요일인지 반환하�
 
 """ 메뉴 선택 기능 Section """
 # 기능은 크게 1. 일일 지출금액 추가기능, 2. 특정 날짜 검색 기능, 3. 지난 월별 합계 및 일일 평균 기능, 4~. To be continued.
+
 print("반갑습니다. 현재 시각", str(datetime.datetime.now())+"입니다.")
 print("본 기능은 당신이 용돈지출을 어떻게 하는지 추적하고 그 활용을 돕고자 하는 데 의의가 있습니다.")
 print()
 
 while True:
 	print("""용돈 지출 입력은 1,
-월별 합계 기능은 2,
-특정 날짜 지출금액 검색은 3,
+특정 날짜 검색 기능 2,
+월별 합계 및 일일 평균 기능은 3,
 종료는 9를 입력해주세요.""")
 	print(">" * 50)
 	menu_selected = input("원하시는 기능을 입력해주세요. : ")
@@ -62,13 +62,13 @@ while True:
 	while menu_selected not in ["1","2","3","9"]:
 		menu_selected = input("4가지의 숫자 중 원하시는 것을 정확히 입력해주세요. : ")
 
-	#프로그램 종료 사인.
+#프로그램 종료 사인.
 	if menu_selected == "9":
 		print("감사합니다. 프로그램을 종료합니다.")
 		for i in range(3):
 			print("종료까지.. "+str(3-i))
 			time.sleep(1)
-		break	
+		sys.exit()
 
 # 파일 업로드 :
 	
@@ -82,13 +82,14 @@ while True:
 		recent_record = [];
 	else:
 		recent_record = total_record[-1]
-	print(total_record)
+	# print(total_record)  <- 테스트용 코드. 정확하게 자료가 입력되었는지 확인한다.
+
 
 #####################################
 #### menu 1. 지출금액 추가 기능.
 #####################################
 	# 기록되는 자료 형식은 다음과 같다. 기록되는 텍스트는 pickle package를 활용하도록 한다.
-	""" data_format =  {'today':str(today), 'weekday':which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':10000}"""
+	""" data_format =  {'today':str(today), 'weekday':ft.which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':10000}"""
 	
 
 #### 1.1 - 만약 오늘 처음 금액 지출을 입력한다면 입력되고, 1.2 - 두 번째 이상일 경우 기존 입력된 금액에 추가한다.
@@ -101,13 +102,13 @@ while True:
 				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 
-			record = {'today':str(today), 'weekday':which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':money_spent}
+			record = {'today':str(today), 'weekday':ft.which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':money_spent}
 			total_record.append(record)
 			with open('daily_expenditure.txt', 'wb') as money:
 				pickle.dump(total_record, money)
 
 			print('\n')
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", record['money_used'],"원")
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", ft.numberSeparator(record['money_used']),"원")
 
 
 		# 1.2
@@ -119,7 +120,7 @@ while True:
 				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 			recent_record['money_used'] += money_spent
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", str(recent_record['money_used'])+"원")
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", ft.numberSeparator(str(recent_record['money_used']))+"원")
 			print("*" * 80,'\n')
 			
 			total_record[-1] = recent_record
@@ -134,6 +135,7 @@ while True:
 
 	# 2.1 정확한 날짜 입력 받기.
 	if menu_selected == "2":
+		print()
 		print("특정 날짜 검색 기능입니다. 원하시는 날짜를 입력해주시면 그 날의 지출액을 알려드립니다.")
 		day_input = input("'2016-04-01'과 같은 형식으로 날짜를 입력해주세요 : ")
 
@@ -147,8 +149,24 @@ while True:
 				if ft.checkRightFormat(day_input):
 					break
 
+	# 2.2 json 파일에서 해당 날짜 있는지 검사.
+		input_year = int(day_input[:4])
+		input_month = int(day_input[5:7])
+		input_day = int(day_input[-2:]) # 이 값들은 입력받은 값으로 문자열이다. 반면 내가 갖고 있는 정보는 숫자. 통일이 필요.
+		asked_record = None
 	
+	# 맞는 값을 찾았음.
+		for record in total_record:
+			if record['year'] == input_year and record['month'] == input_month and input_month \
+			and record['day'] == input_day:
+				asked_record = record
+				break
 
-
-
- 			
+		if asked_record is None:
+			print("이 날은 기록이 남아있지 않습니다.")
+			print("\n________________________________")
+		else:
+			print("\n##############################")
+			print("요청하신",asked_record['today']+"일은 "+asked_record['weekday']+"이고 지출하신 금액은 "+\
+			 ft.numberSeparator(str(asked_record['money_used']))+"원입니다.")
+			print("\n##############################\n")
