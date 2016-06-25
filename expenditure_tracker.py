@@ -4,6 +4,7 @@
 컴퓨터 시작 시 자동으로 시작되고, 
 그래서 매일의 돈 지출의 기록을 기록, 추적할 수 있도록 하는 것이 핵심이다.
 간단하게 매일 쓴 돈을 기록하고, 달별로 계산해주는 것을 목표로 한다.
+간단한 통계도 가능하게 한다.
 """
 
 import datetime
@@ -11,6 +12,7 @@ import datetime
 import sys
 import time
 import pickle
+import Functions_for_tracker as ft # 내가 만든 함수 저장소 
 
 # 비밀번호 설정. 내가 아닌 다른 사람이 입력하는 것을 방지한다.
 # try:
@@ -44,7 +46,7 @@ def which_day(date): 						# 입력한 날짜가 무슨 요일인지 반환하�
 
 
 """ 메뉴 선택 기능 Section """
-# 기능은 크게 1. 일일 지출금액 추가기능, 2. 지난 월별 합계 및 일일 평균 기능, 3. 특정 날짜 검색 기능, 4~. To be continued.
+# 기능은 크게 1. 일일 지출금액 추가기능, 2. 특정 날짜 검색 기능, 3. 지난 월별 합계 및 일일 평균 기능, 4~. To be continued.
 print("반갑습니다. 현재 시각", str(datetime.datetime.now())+"입니다.")
 print("본 기능은 당신이 용돈지출을 어떻게 하는지 추적하고 그 활용을 돕고자 하는 데 의의가 있습니다.")
 print()
@@ -117,7 +119,7 @@ while True:
 				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 			recent_record['money_used'] += money_spent
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", str(recent_record['money_used']))
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", str(recent_record['money_used'])+"원")
 			print("*" * 80,'\n')
 			
 			total_record[-1] = recent_record
@@ -125,8 +127,27 @@ while True:
 				pickle.dump(total_record, money)
 
 
+#####################################
+#### menu 2. 특정 날짜 검색기능.
+#####################################
+	# 연도, 월, 날짜를 기록하면 그 날에 사용한 금액을 반환한다. 만약 입력값이 없는 곳이라면 '없다'고 반환한다.(0원이 아니다.) 
 
+	# 2.1 정확한 날짜 입력 받기.
+	if menu_selected == "2":
+		print("특정 날짜 검색 기능입니다. 원하시는 날짜를 입력해주시면 그 날의 지출액을 알려드립니다.")
+		day_input = input("'2016-04-01'과 같은 형식으로 날짜를 입력해주세요 : ")
 
+		while True:
+			# 형식이 맞는지 조사. 하나의 조건이라도 안 맞으면 no way..
+			if ft.checkRightFormat(day_input):
+				print("감사합니다.")
+				break
+			else:
+				day_input = input("형식을 지켜 정확히 입력해주세요 : ")
+				if ft.checkRightFormat(day_input):
+					break
+
+	
 
 
 
