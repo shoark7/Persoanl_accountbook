@@ -86,7 +86,7 @@ while True:
 
 
 #####################################
-#### menu 1. 지출금액 추가 기능.
+#### menu 1. 지출금액 추가 기능. #########
 #####################################
 	# 기록되는 자료 형식은 다음과 같다. 기록되는 텍스트는 pickle package를 활용하도록 한다.
 	""" data_format =  {'today':str(today), 'weekday':ft.which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':10000}"""
@@ -129,7 +129,7 @@ while True:
 
 
 #####################################
-#### menu 2. 특정 날짜 검색기능.
+#### menu 2. 특정 날짜 검색기능.  ########
 #####################################
 	# 연도, 월, 날짜를 기록하면 그 날에 사용한 금액을 반환한다. 만약 입력값이 없는 곳이라면 '없다'고 반환한다.(0원이 아니다.) 
 
@@ -170,3 +170,68 @@ while True:
 			print("요청하신",asked_record['today']+"일은 "+asked_record['weekday']+"이고 지출하신 금액은 "+\
 			 ft.numberSeparator(str(asked_record['money_used']))+"원입니다.")
 			print("\n##############################\n")
+
+
+#####################################
+### menu 3. 월별 합계 및 일일 평균 기능. ###
+#####################################
+	# 3.1 월별 합계 및 평균, 3.2 요일별 평균. 
+		"""
+		monthly_total = {
+							'2016' : {'1' : [0,0], '2': [0,0], '3': [0,0], '4': [0,0], '5':[0,0]\
+							'6':[0,0], '7':[0,0], '8':[0,0], '9':[0,0], '10':[0,0], '11':[0,0], '12':[0,0]},
+							
+						}
+		years = ['2016', '2017', '2018']
+		위와 같은 형식. 월의 첫번째 인자는 금액, 두 번째 인자는 입력된 날짜이다.				 
+		""" 
+
+	# 만약 3번 기능을 요청 받았다면,
+	if menu_selected == "3":
+
+
+
+		# 3.0 자료 셋 만들기
+		monthly_total = {}
+		years = []
+
+		for i, record in enumerate(total_record):
+			if i == 0:
+				year = str(record['year'])
+				monthly_total[year] = ft.makeYearDict()
+				monthly_total[year][str(record['month'])][0] += record['money_used']
+				monthly_total[year][str(record['month'])][1] += 1
+				if str(record['year']) not in years:
+					years.append(str(record['year']))
+
+			elif total_record[i]['year'] != total_record[i-1]['year']:
+				year = str(record['year'])
+				monthly_total[year] = ft.makeYearDict()
+				monthly_total[year][str(record['month'])][0] += record['money_used']
+				monthly_total[year][str(record['month'])][1] += 1
+				if str(record['year']) not in years:
+					years.append(str(record['year']))
+			else:
+				monthly_total[year][str(record['month'])][0] += record['money_used']
+				monthly_total[year][str(record['month'])][1] += 1
+				if str(record['year']) not in years:
+					years.append(str(record['year']))
+		print(monthly_total)
+		print(years)
+
+
+		# 3.1 월별 합계 및 평균
+		for year in years:
+			print(year +"연도의 월별 지출액, 입력일수, 하루 평균 지출액을 말씀드리겠습니다.\n")
+			for month in range(1,13):
+				if monthly_total[year][str(month)][0] == 0:
+					pass
+				else:
+					print("\t"+str(month) + "월별의 총 지출액은 *" + ft.numberSeparator(monthly_total[year][str(month)][0])+"*원이고 입력해주신 날 수는 *"  \
+									+ str(monthly_total[year][str(month)][1])+"*일입니다. 일일 평균 *" +  \
+									ft.numberSeparator(int(str(int(monthly_total[year][str(month)][0]) // int(monthly_total[year][str(month)][1]))))+"*원 사용하셨습니다." )
+			print("\n")					
+
+		
+
+
