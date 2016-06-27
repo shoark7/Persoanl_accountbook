@@ -108,7 +108,7 @@ while True:
 				pickle.dump(total_record, money)
 
 			print('\n')
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", ft.numberSeparator(record['money_used']),"원")
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *"+ ft.numberSeparator(record['money_used']),"*원 입력 받았습니다.")
 
 
 		# 1.2
@@ -120,7 +120,7 @@ while True:
 				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 			recent_record['money_used'] += money_spent
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은", ft.numberSeparator(str(recent_record['money_used']))+"원")
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *"+ ft.numberSeparator(str(recent_record['money_used']))+"*원입니다.")
 			print("*" * 80,'\n')
 			
 			total_record[-1] = recent_record
@@ -138,7 +138,9 @@ while True:
 		print()
 		print("특정 날짜 검색 기능입니다. 원하시는 날짜를 입력해주시면 그 날의 지출액을 알려드립니다.")
 		day_input = input("'2016-04-01'과 같은 형식으로 날짜를 입력해주세요 : ")
-
+		if day_input == '오늘':
+			day_input = str(today)
+ 
 		while True:
 			# 형식이 맞는지 조사. 하나의 조건이라도 안 맞으면 no way..
 			if ft.checkRightFormat(day_input):
@@ -157,7 +159,7 @@ while True:
 	
 	# 맞는 값을 찾았음.
 		for record in total_record:
-			if record['year'] == input_year and record['month'] == input_month and input_month \
+			if record['year'] == input_year and record['month'] == input_month  \
 			and record['day'] == input_day:
 				asked_record = record
 				break
@@ -167,8 +169,8 @@ while True:
 			print("\n________________________________")
 		else:
 			print("\n##############################")
-			print("요청하신",asked_record['today']+"일은 "+asked_record['weekday']+"이고 지출하신 금액은 "+\
-			 ft.numberSeparator(str(asked_record['money_used']))+"원입니다.")
+			print("요청하신",asked_record['today']+"일은 "+asked_record['weekday']+"이고 지출하신 금액은 *"+\
+			 ft.numberSeparator(str(asked_record['money_used']))+"*원입니다.")
 			print("\n##############################\n")
 
 
@@ -222,16 +224,34 @@ while True:
 
 		# 3.1 월별 합계 및 평균
 		for year in years:
-			print(year +"연도의 월별 지출액, 입력일수, 하루 평균 지출액을 말씀드리겠습니다.\n")
+			print("\n"+year +"연도의 월별 지출액, 입력일수, 하루 평균 지출액을 말씀드리겠습니다.\n")
 			for month in range(1,13):
 				if monthly_total[year][str(month)][0] == 0:
 					pass
 				else:
-					print("\t"+str(month) + "월별의 총 지출액은 *" + ft.numberSeparator(monthly_total[year][str(month)][0])+"*원이고 입력해주신 날 수는 *"  \
+					print("  "+str(month) + "월별의 총 지출액은 *" + ft.numberSeparator(monthly_total[year][str(month)][0])+"*원이고 입력해주신 날 수는 *"  \
 									+ str(monthly_total[year][str(month)][1])+"*일입니다. 일일 평균 *" +  \
 									ft.numberSeparator(int(str(int(monthly_total[year][str(month)][0]) // int(monthly_total[year][str(month)][1]))))+"*원 사용하셨습니다." )
 			print("\n")					
 
 		
+		# 3.2 요일 별 평균 내기.
+		weekday_total = {'월요일':[0,0], '화요일': [0,0], '수요일': [0,0], '목요일': [0,0],\
+		 '금요일': [0,0], '토요일': [0,0], '일요일': [0,0]}
+		weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+		# 요일 별로 저장할 변수 지정. 요일의 value 값은 첫번째는 총 사용한 금액, 두 번째는 평균을 내기 위해 사용할 일수이다.
+
+		for record in total_record:
+			weekday_total[record['weekday']][0] += record['money_used']
+			weekday_total[record['weekday']][1] += 1
+
+		print("\t요일별 사용한 금액을 말씀드리겠습니다.")
+		for i, weekday in enumerate(weekday_total):
+			try:
+				print(weekdays[i], "-"*4+"> 총금액 : "+ ft.numberSeparator(weekday_total[weekdays[i]][0])+"원, " \
+					+"평균 :", ft.numberSeparator(weekday_total[weekdays[i]][0] // weekday_total[weekdays[i]][1])+"원")
+			except ZeroDivisionError:
+				print(weekdays[i], "-"*4+"> 총금액 : "+ "0원, " +"평균 :", "0원")
+		print('\n')
 
 
