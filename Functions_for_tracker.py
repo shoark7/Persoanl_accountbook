@@ -10,14 +10,31 @@ def which_day(date): 						# 입력한 날짜가 무슨 요일인지 반환하�
 
 
 # 입력 받은 날짜가 올바른 형식인지 조사한다.
+# 2016-04-01 -> 총 10개의 글자수
 def checkRightFormat(str):
+# 	try:
+# 		if str[0:4].isnumeric() and str[4] == '-' and str[5:7].isnumeric() \
+# and str[7] == '-' and str[-2:].isnumeric() and len(str) == 10:
+# 			return True
+# 		else:
+# 			return False
+# 	except:
+# 		return False
 	try:
 		if str[0:4].isnumeric() and str[4] == '-' and str[5:7].isnumeric() \
-		and str[7] == '-' and str[-2:].isnumeric() and len(str) == 10:
+and str[7] == '-' and str[-2:].isnumeric() and len(str) == 10:
 			return True
-	except:
+		else:
+			return False
+	except IndexError:
+		print("제대로 된 형식으로 입력하지 않으셨습니다.")
 		return False
-	else: return False
+	except:
+		print("문제가 있습니다.")
+		return False
+	
+
+
 
 
 

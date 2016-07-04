@@ -46,17 +46,18 @@ today = datetime.date.today()
 
 """ 메뉴 선택 기능 Section """
 # 기능은 크게 1. 일일 지출금액 추가기능, 2. 특정 날짜 검색 기능, 3. 지난 월별 합계 및 일일 평균 기능, 4~. To be continued.
-
+print('\n'+'*' * 90+'\n')
 print("반갑습니다. 현재 시각", str(datetime.datetime.now())+"입니다.")
 print("본 기능은 당신이 용돈지출을 어떻게 하는지 추적하고 그 활용을 돕고자 하는 데 의의가 있습니다.")
-print()
+print('\n'+'*' * 90+'\n')
+
 
 while True:
-	print("""용돈 지출 입력은 1,
+	print("""\n용돈 지출 입력은 1,
 특정 날짜 검색 기능 2,
 월별 합계 및 일일 평균 기능은 3,
 종료는 9를 입력해주세요.""")
-	print(">" * 50)
+	print('\n'+"↓" * 10+'\n')
 	menu_selected = input("원하시는 기능을 입력해주세요. : ")
 
 	while menu_selected not in ["1","2","3","9"]:
@@ -138,18 +139,17 @@ while True:
 		print()
 		print("특정 날짜 검색 기능입니다. 원하시는 날짜를 입력해주시면 그 날의 지출액을 알려드립니다.")
 		day_input = input("'2016-04-01'과 같은 형식으로 날짜를 입력해주세요 : ")
-		if day_input == '오늘':
-			day_input = str(today)
  
-		while True:
+		while not ft.checkRightFormat(day_input):
 			# 형식이 맞는지 조사. 하나의 조건이라도 안 맞으면 no way..
-			if ft.checkRightFormat(day_input):
-				print("감사합니다.")
+
+			if day_input == '오늘' or day_input == 'today':
+				day_input = str(today)
 				break
-			else:
-				day_input = input("형식을 지켜 정확히 입력해주세요 : ")
-				if ft.checkRightFormat(day_input):
-					break
+			elif day_input =="어제" or day_input == 'yesterday':
+				day_input = str(datetime.date(today.year, today.month, today.day - 1))
+				break
+			day_input = input("형식을 지켜 다시 입력해주세요 : ")
 
 	# 2.2 json 파일에서 해당 날짜 있는지 검사.
 		input_year = int(day_input[:4])
@@ -169,7 +169,7 @@ while True:
 			print("\n________________________________")
 		else:
 			print("\n##############################")
-			print("요청하신",asked_record['today']+"일은 "+asked_record['weekday']+"이고 지출하신 금액은 *"+\
+			print("요청하신",asked_record['today']+"일은 *"+asked_record['weekday']+"*이고 지출하신 금액은 *"+\
 			 ft.numberSeparator(str(asked_record['money_used']))+"*원입니다.")
 			print("\n##############################\n")
 
