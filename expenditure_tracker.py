@@ -15,24 +15,24 @@ import pickle
 import Functions_for_tracker as ft # 내가 만든 함수 저장소 
 
 # 비밀번호 설정. 내가 아닌 다른 사람이 입력하는 것을 방지한다.
-# try:
-# 	input_password = sys.argv[1]
+try:
+	input_password = sys.argv[1]
 
-# except:
-# 	input_password = input("비밀번호를 입력하셔야 합니다. : ")
-# 	for i in range(2):
-# 		if input_password != "696238":
-# 			input_password = input("틀렸습니다. 다시 입력하세요 : ")
+except:
+	input_password = input("비밀번호를 입력하셔야 합니다. : ")
+	for i in range(2):
+		if input_password != "696238":
+			input_password = input("틀렸습니다. 다시 입력하세요 : ")
 
-# 	if input_password != "696238":
-# 		sys.exit()
-# else:
-# 	for i in range(2):
-# 		if input_password != "696238":
-# 			input_password = input("틀렸습니다. 다시 입력하세요 : ")
+	if input_password != "696238":
+		sys.exit()
+else:
+	for i in range(2):
+		if input_password != "696238":
+			input_password = input("틀렸습니다. 다시 입력하세요 : ")
 
-# 	if input_password != "696238":
-# 		sys.exit()
+	if input_password != "696238":
+		sys.exit()
 
 
 
@@ -97,10 +97,11 @@ while True:
 	if menu_selected == "1":
 		# 1.1 
 		if recent_record == [] or recent_record['today'] != str(today):
+			print()
 			print("\n오늘의 처음 입력이십니다.")
 			money_spent = input("오늘 사용하신 금액을 입력해주세요. : ")
 			while not money_spent.isnumeric():
-				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
+				money_spent = input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 
 			record = {'today':str(today), 'weekday':ft.which_day(today), 'year':today.year, 'month':today.month, 'day':today.day, 'money_used':money_spent}
