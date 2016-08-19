@@ -1,3 +1,12 @@
+import datetime
+# import json
+import sys
+import time
+import pickle
+import Functions_for_tracker as ft # 내가 만든 함수 저장소 
+
+
+
 #expenditure_tracker.py
 #프로젝트 시작 날짜 : 2016-06-18
 """ 
@@ -7,12 +16,6 @@
 간단한 통계도 가능하게 한다.
 """
 
-import datetime
-# import json
-import sys
-import time
-import pickle
-import Functions_for_tracker as ft # 내가 만든 함수 저장소 
 
 # 비밀번호 설정. 내가 아닌 다른 사람이 입력하는 것을 방지한다.
 try:
@@ -45,7 +48,9 @@ today = datetime.date.today()
 
 
 """ 메뉴 선택 기능 Section """
-# 기능은 크게 1. 일일 지출금액 추가기능, 2. 특정 날짜 검색 기능, 3. 지난 월별 합계 및 일일 평균 기능, 4~. To be continued.
+# 기능은 크게 1. 일일 지출금액 추가기능, 2. 특정 날짜 검색 기능, 3. 지난 월별 합계 및 일일 평균 기능,
+# 4. 관리자 기능이 있습니다.
+
 print('\n'+'*' * 90+'\n')
 print("반갑습니다. 현재 시각", str(datetime.datetime.now())+"입니다.")
 print("본 기능은 당신이 용돈지출을 어떻게 하는지 추적하고 그 활용을 돕고자 하는 데 의의가 있습니다.")
@@ -110,7 +115,8 @@ while True:
 				pickle.dump(total_record, money)
 
 			print('\n')
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *"+ ft.numberSeparator(record['money_used']),"*원 입력 받았습니다.")
+			# print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *"+ ft.numberSeparator(record['money_used']),"*원 입력 받았습니다.")
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *{:,}*원 입력 받았습니다.".format(record['money_used']))
 
 
 		# 1.2
@@ -122,7 +128,7 @@ while True:
 				input("숫자를 입력하셔야 합니다. 다시 입력하세요 : ")
 			money_spent = int(money_spent)
 			recent_record['money_used'] += money_spent
-			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *"+ ft.numberSeparator(str(recent_record['money_used']))+"*원입니다.")
+			print("현재 시각",datetime.datetime.now()," 오늘 하루 사용하신 금액은 *{:,}*원 입력 받았습니다.".format(record['money_used']))
 			print("*" * 80,'\n')
 			
 			total_record[-1] = recent_record
@@ -170,8 +176,8 @@ while True:
 			print("\n________________________________")
 		else:
 			print("\n##############################")
-			print("요청하신",asked_record['today']+"일은 *"+asked_record['weekday']+"*이고 지출하신 금액은 *"+\
-			 ft.numberSeparator(str(asked_record['money_used']))+"*원입니다.")
+			print("요청하신",asked_record['today']+"일은 *"+asked_record['weekday']+"*이고 지출하신 금액은 *\
+{:,}*원입니다.".format(asked_record['money_used']))
 			print("\n##############################\n")
 
 
@@ -230,9 +236,9 @@ while True:
 				if monthly_total[year][str(month)][0] == 0:
 					pass
 				else:
-					print("  "+str(month) + "월별의 총 지출액은 *" + ft.numberSeparator(monthly_total[year][str(month)][0])+"*원이고 입력해주신 날 수는 *"  \
-									+ str(monthly_total[year][str(month)][1])+"*일입니다. 일일 평균 *" +  \
-									ft.numberSeparator(int(str(int(monthly_total[year][str(month)][0]) // int(monthly_total[year][str(month)][1]))))+"*원 사용하셨습니다." )
+					print("  "+str(month) + "월별의 총 지출액은 *{:,}*원이고 입력해주신 날 수는 *".format(monthly_total[year][str(month)][0])  \
+									+ str(monthly_total[year][str(month)][1])+"*일입니다. 일일 평균 *{:,}\
+									*원 사용하셨습니다.".format(int(str(int(monthly_total[year][str(month)][0]) // int(monthly_total[year][str(month)][1])))))
 			print("\n")					
 
 		
@@ -249,10 +255,17 @@ while True:
 		print("\t요일별 사용한 금액을 말씀드리겠습니다.")
 		for i, weekday in enumerate(weekday_total):
 			try:
-				print(weekdays[i], "-"*4+"> 총금액 : "+ ft.numberSeparator(weekday_total[weekdays[i]][0])+"원, " \
-					+"평균 :", ft.numberSeparator(weekday_total[weekdays[i]][0] // weekday_total[weekdays[i]][1])+"원")
+				print(weekdays[i], "-"*4+"> 총금액 : *{:,}*원, ".format(weekday_total[weekdays[i]][0]) \
+					+"평균 : {:,}원".format(weekday_total[weekdays[i]][0] // weekday_total[weekdays[i]][1]))
 			except ZeroDivisionError:
 				print(weekdays[i], "-"*4+"> 총금액 : "+ "0원, " +"평균 :", "0원")
 		print('\n')
+
+
+
+
+#####################################
+### menu 4. 관리자 기능. ###
+#####################################
 
 
